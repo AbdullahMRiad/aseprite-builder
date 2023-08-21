@@ -1,9 +1,9 @@
-name: 手动构建
+name: manual_build
 on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Release对应的tags'
+        description: 'corresponding_tags'
         required: true
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
             enable_ui: on
     steps:
 
-    - name: 获得 Release 的 Body 与仓库名称
+    - name: get_skia_and_generate_files
       id: get-content
       shell: bash
       run: |
@@ -41,7 +41,7 @@ jobs:
     - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: ilammy/msvc-dev-cmd@v1
 
-    - name: 获取 skia 并且生成 Makefile
+    - name: get_skia_and_makefile
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]] ; then
@@ -60,12 +60,12 @@ jobs:
           -DSKIA_LIBRARY_DIR=./skia/out/Release-x64 \
           -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
 
-    - name: 编译
+    - name: compile
       shell: bash
       run: |
         cd build && ninja
     
-    - name: 获取 "libcrypto-1_1-x64.dll"
+    - name: include "libcrypto-1_1-x64.dll"
       shell: bash 
       run: |
         GITHUB_REPOSITORY="${{ github.repository }}"
@@ -73,19 +73,19 @@ jobs:
 
         curl -L -o D:/a/$REPO_NAME/$REPO_NAME/build/bin/libcrypto-1_1-x64.dll https://github.com/feenkcom/libopenssl/releases/download/v0.5.0/crypto-x86_64-pc-windows-msvc.dll
     
-    # # 请确保是私有仓库再启用该功能
-    # - name: 上传文件到 artifact
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: aseprite 
-    #     path: |
-    #       REPO_NAME=${{ steps.get-content.outputs.repo-name }}
+    # Make sure it is a private repository and uncomment this:
+    - name: Unload files to artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: aseprite 
+        path: |
+          REPO_NAME=${{ steps.get-content.outputs.repo-name }}
 
-    #       D:/a/$REPO_NAME/$REPO_NAME/build/bin/data
-    #       D:/a/$REPO_NAME/$REPO_NAME/build/bin/aseprite.exe
-    #       D:/a/$REPO_NAME/$REPO_NAME/build/bin/libcrypto-1_1-x64.dll
+          D:/a/$REPO_NAME/$REPO_NAME/build/bin/data
+          D:/a/$REPO_NAME/$REPO_NAME/build/bin/aseprite.exe
+          D:/a/$REPO_NAME/$REPO_NAME/build/bin/libcrypto-1_1-x64.dll
 
-    - name: 打包
+    - name: pack
       shell: bash
       run: |
         REPO_NAME=${{ steps.get-content.outputs.repo-name }}
@@ -94,7 +94,7 @@ jobs:
         7z a -tzip aseprite.${{ github.event.inputs.tag_name }}.zip data aseprite.exe libcrypto-1_1-x64.dll
         cp aseprite.${{ github.event.inputs.tag_name }}.zip D:/a/
 
-    - name: 草拟 Release 并且上传文件
+    - name: release_upload
       uses: softprops/action-gh-release@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
