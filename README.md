@@ -18,7 +18,7 @@ By using GitHub Actions, no manual compilation is required.
 
   If the current version of the Fork repository is different from the latest Releases of Aseprite, it will automatically get the latest tags and then perform compilation and generate `draft` in `Code-Releases` of the Fork repository.
 
-`Automatically check for updates and build` workflow will be executed automatically at `0:00` UTC (Coordinated Universal Time) and `8:00` Beijing time (UTC+8), please edit `.github/workflows/ if you want to enable it auto-build.yml`, uncomment the third to fifth lines:
+`check` workflow will be executed automatically at `0:00` UTC (Coordinated Universal Time) and `8:00` Beijing time (UTC+8), please edit `.github/workflows/ if you want to enable it auto-build.yml`, uncomment the third to fifth lines:
 ~~~
 on:
   schedule:
