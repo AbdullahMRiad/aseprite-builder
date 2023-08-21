@@ -1,4 +1,4 @@
-name: 自动检查更新与构建
+name: check
 on:
   # # 取消注释以启用自动激活
   # schedule:
@@ -15,18 +15,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: 获取最后的tags 
+    - name: obtain_tags 
       id: target-tag
       run: |
         tag=$(curl -s https://api.github.com/repos/aseprite/aseprite/tags | jq -r '.[0].name')
         # echo "::set-output name=tag::$tag"
         echo "tag=$(echo $tag)" >> $GITHUB_OUTPUT
-    - name: 获取本仓库最后的tags
+    - name: obtainl_tags
       id: current-tag
       run: |
         tag=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }} " -s https://api.github.com/repos/${{ github.repository }}/tags | jq -r '.[0].name')
         echo "tag=$(echo $tag)" >> $GITHUB_OUTPUT
-    - name: 比对tags
+    - name: compare_tags
       id: check-tags
       run: |
         if [ "${{ steps.target-tag.outputs.tag }}" = "${{ steps.current-tag.outputs.tag }}" ] ; then
@@ -54,7 +54,7 @@ jobs:
 
     steps:
 
-    - name: 获得 Release 的 Body 与仓库名称
+    - name: get_release_content
       id: get-content
       shell: bash
       run: |
@@ -75,7 +75,7 @@ jobs:
     - uses: seanmiddleditch/gha-setup-ninja@master
     - uses: ilammy/msvc-dev-cmd@v1
 
-    - name: 获取 skia 并且生成 Makefile
+    - name: get_skia_and_generate_files
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]] ; then
@@ -94,12 +94,12 @@ jobs:
           -DSKIA_LIBRARY_DIR=./skia/out/Release-x64 \
           -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
 
-    - name: 编译
+    - name: compile
       shell: bash
       run: |
         cd build && ninja
     
-    - name: 获取 "libcrypto-1_1-x64.dll"
+    - name: include "libcrypto-1_1-x64.dll"
       shell: bash 
       run: |
         GITHUB_REPOSITORY="${{ github.repository }}"
@@ -119,7 +119,7 @@ jobs:
     #       D:/a/$REPO_NAME/$REPO_NAME/build/bin/aseprite.exe
     #       D:/a/$REPO_NAME/$REPO_NAME/build/bin/libcrypto-1_1-x64.dll
 
-    - name: 打包
+    - name: pack
       shell: bash
       run: |
         GITHUB_REPOSITORY="${{ github.repository }}"
@@ -129,7 +129,7 @@ jobs:
         7z a -tzip aseprite.${{ needs.check.outputs.tag }}.zip data aseprite.exe libcrypto-1_1-x64.dll
         cp aseprite.${{ needs.check.outputs.tag }}.zip D:/a/
 
-    - name: 草拟 Release 并且上传文件
+    - name: release_upload
       uses: softprops/action-gh-release@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
