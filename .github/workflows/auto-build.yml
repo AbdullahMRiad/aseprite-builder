@@ -1,6 +1,6 @@
 name: check
 on:
-  # # 取消注释以启用自动激活
+  # # scheduled check(scheduled build) if commented and you want to have scheduled checks, uncomment the below:
   # schedule:
   #   - cron: '0 0 * * *'
   workflow_dispatch:
