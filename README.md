@@ -8,11 +8,11 @@ By using GitHub Actions, no manual compilation is required.
 
 # Instructions
 
-  Fork this repository, open the `Setting-Actions-General` page of the Fork repository, make sure `Workflow permissions` select `Read and write permissions`.
+  Fork this repository, open the `Setting->Actions->General` page of the Fork repository, make sure `Workflow permissions` select `Read and write permissions`.
 
 ## Build Manually
 
-  Visit <https://github.com/aseprite/aseprite/releases>, and get the `tags` corresponding to the `Release` you want to build. Then open the `Actions` page of the Fork repository, select `manually build` workflow on the left, and click` Run workflow` and then fill in the `tags` just obtained under the prompt corresponding to `Release tags`, click `Run workflow` and wait for `workflow` to be executed. Open the `Code-Releases` of the Fork repository, in the ` Download from the attachment below draft`.
+  Visit <https://github.com/aseprite/aseprite/releases>, and get the `tags` corresponding to the `Release` you want to build. Then open the `Actions` page of the Fork repository, select `manual_build` workflow on the left, and click` Run workflow` and then fill in the `tags` just obtained under the prompt corresponding to `Release tags`, click `Run workflow` and wait for `workflow` to be executed. Open `Code->Releases` of the Fork repository, in the ` Download from the attachment below draft`.
 
 ## Automatically check for updates and builds
 
