@@ -28,7 +28,7 @@ jobs:
     - name: compare_tags
       id: check-tags
       run: |
-        if [ "${{ steps.target-tag.outputs.tag }}" = "${{ steps.current-tag.outputs.tag }}" ] ; then
+        if [ "${{ steps.target-tag.outputs.tag }}" == "${{ steps.current-tag.outputs.tag }}" ] ; then
           echo "Tags match, skipping downstream job"
           echo "match=true" >> $GITHUB_OUTPUT
         else
@@ -38,7 +38,7 @@ jobs:
 
   build:
     needs: check
-    if: ${{ needs.check.outputs.match }}  == 'false'
+    if: needs.check.outputs.match == 'false'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
