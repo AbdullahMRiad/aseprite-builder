@@ -2,7 +2,7 @@ name: check
 on:
   # # scheduled check(scheduled build) if commented and you want to have scheduled checks, uncomment the below:
   # schedule:
-  #   - cron: '0 0 * * *'
+  #   - cron: '0 0 * * *' h
   workflow_dispatch:
 
 jobs:
